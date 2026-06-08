@@ -4,6 +4,7 @@ import TextHero from "@/src/components/sections/home2/TextHero"
 import Carousel from "@/src/components/sections/home2/Carousel"
 import Recognition from "@/src/components/sections/home2/Recognition"
 import StatsSection from "@/src/components/sections/StatsSection"
+import AboutSection from "@/src/components/sections/home2/AboutSection"
 
 export default function Home2() {
   return (
@@ -16,8 +17,9 @@ export default function Home2() {
     >
       <TextHero />
       <Carousel />
-      <Recognition />
       <StatsSection />
+      <AboutSection />
+      <Recognition />
     </motion.main>
   )
 }

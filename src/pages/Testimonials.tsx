@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react"
 import { motion } from "motion/react"
-import { fadeUp, pageTransition, staggerFast, staggerMed } from "@/src/lib/animations"
+import { fadeUp, pageTransition, staggerMed } from "@/src/lib/animations"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const TESTIMONIALS = [
   {
@@ -248,88 +250,170 @@ const TESTIMONIALS = [
 ]
 
 export default function Testimonials() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [visibleCount, setVisibleCount] = useState(3)
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setVisibleCount(1)
+      } else if (window.innerWidth < 1024) {
+        setVisibleCount(2)
+      } else {
+        setVisibleCount(3)
+      }
+    }
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  const nextSlide = () => {
+    if (currentIndex < TESTIMONIALS.length - visibleCount) {
+      setCurrentIndex(prev => prev + 1)
+    } else {
+      setCurrentIndex(0)
+    }
+  }
+
+  const prevSlide = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1)
+    } else {
+      setCurrentIndex(Math.max(0, TESTIMONIALS.length - visibleCount))
+    }
+  }
+
   return (
     <motion.main
       variants={pageTransition}
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="pt-32 pb-24 px-[clamp(20px,5vw,80px)] bg-white text-zinc-900 min-h-screen"
+      className="pt-32 pb-24 px-[clamp(20px,4vw,60px)] bg-white text-zinc-900 min-h-screen"
     >
-      <div className="max-w-[1280px] mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         <motion.div
           variants={staggerMed}
-          className="mb-24 text-center lg:text-left"
+          className="mb-16 text-center lg:text-left px-4"
         >
           <motion.span variants={fadeUp} className="font-body text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#E8293B] mb-6 block">
             — INDUSTRY VOICES —
           </motion.span>
-          <motion.h1 variants={fadeUp} className="font-display text-[clamp(4rem,10vw,10rem)] leading-[0.85] tracking-tight uppercase">
+          <motion.h1 variants={fadeUp} className="font-display text-[clamp(4.5rem,11vw,11rem)] leading-[0.85] tracking-tight uppercase">
             Word on the <br className="hidden lg:block"/><span className="text-[#E8293B]">Street</span>.
           </motion.h1>
         </motion.div>
 
-        <motion.div 
-          variants={staggerFast}
-          className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8"
-        >
-          {TESTIMONIALS.map((t, idx) => (
-            <motion.div
-              key={idx}
-              variants={fadeUp}
-              className="break-inside-avoid"
-            >
-              <div className="bg-zinc-50 border border-black/5 rounded-[2rem] p-10 hover:border-[#E8293B]/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col group">
-                {(t as any).type === 'video' && (t as any).videoUrl ? (
-                  <div className="mb-8 flex-grow">
-                    <div className="aspect-video w-full bg-zinc-200 rounded-xl overflow-hidden shadow-md group-hover:shadow-lg transition-transform duration-300">
-                      <iframe 
-                        src={`https://www.youtube.com/embed/${(t as any).videoUrl.split('v=')[1]?.split('&')[0]}`} 
-                        title={`${t.name} Testimonial`} 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowFullScreen
-                        className="w-full h-full"
-                      ></iframe>
+        {/* Sliding Carousel Section */}
+        <div className="relative w-full overflow-hidden">
+          <div className="relative">
+            {/* Outer Slider Tracks */}
+            <div className="overflow-hidden w-full pb-8">
+              <div
+                className="flex transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                style={{
+                  transform: `translateX(-${currentIndex * (100 / visibleCount)}%)`,
+                }}
+              >
+                {TESTIMONIALS.map((t, idx) => (
+                  <div
+                    key={idx}
+                    className="px-4 shrink-0 flex flex-col animate-none"
+                    style={{ width: `${100 / visibleCount}%` }}
+                  >
+                    <div className="bg-zinc-50 border border-black/5 rounded-[2.5rem] p-8 hover:border-[#E8293B]/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col justify-between group">
+                      
+                      {/* Top part (Video or Quote text) */}
+                      {t.type === 'video' && t.videoUrl ? (
+                        <div className="mb-8 flex-grow">
+                          <div className="aspect-video w-full bg-zinc-200 rounded-2xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                            <iframe 
+                              src={`https://www.youtube.com/embed/${t.videoUrl.split('v=')[1]?.split('&')[0]}`} 
+                              title={`${t.name} Testimonial`} 
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                              allowFullScreen
+                              className="w-full h-full border-none"
+                            ></iframe>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="mb-8 flex-grow">
+                          <span className="font-display text-6xl text-[#E8293B]/20 leading-none block mb-2 group-hover:text-[#E8293B] transition-colors">"</span>
+                          <p className="font-body text-lg lg:text-xl font-light leading-relaxed text-zinc-900/80 italic">
+                            {t.quote}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Author Details at Bottom */}
+                      <div className="mt-auto pt-6 border-t border-black/5 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <img 
+                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=e4e4e7&color=000&size=150`} 
+                            alt={t.name} 
+                            className="w-12 h-12 rounded-full border border-black/10 object-cover shrink-0" 
+                            referrerPolicy="no-referrer"
+                          />
+                          <div>
+                            <h4 className="font-display text-xl uppercase tracking-tight text-zinc-900 group-hover:text-[#E8293B] transition-colors line-clamp-1">{t.name}</h4>
+                            <p className="font-body text-[0.625rem] font-bold tracking-widest uppercase text-zinc-500 mt-1 line-clamp-1">
+                              {t.role}
+                            </p>
+                          </div>
+                        </div>
+                        {t.company && (
+                          <img 
+                            src={`https://logo.clearbit.com/${t.company.toLowerCase().replace(/ /g, '')}.com`} 
+                            className="h-6 max-w-[70px] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 shrink-0" 
+                            alt={t.company}
+                            onError={(e) => e.currentTarget.style.display = 'none'}
+                            referrerPolicy="no-referrer"
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="mb-8 flex-grow">
-                    <span className="font-display text-7xl text-[#E8293B]/20 leading-none block mb-4 group-hover:text-[#E8293B] transition-colors">"</span>
-                    <p className="font-body text-xl lg:text-2xl font-light leading-relaxed text-zinc-900/80">
-                      {(t as any).quote}
-                    </p>
-                  </div>
-                )}
-                
-                <div className="mt-auto pt-6 border-t border-black/10 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <img 
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=e4e4e7&color=000&size=150`} 
-                      alt={t.name} 
-                      className="w-12 h-12 rounded-full border border-black/10 object-cover" 
-                      referrerPolicy="no-referrer"
-                    />
-                    <div>
-                      <h4 className="font-display text-2xl leading-none uppercase tracking-tight text-zinc-900 group-hover:text-[#E8293B] transition-colors">{t.name}</h4>
-                      <p className="font-body text-xs font-bold tracking-widest uppercase text-zinc-500 mt-2">
-                        {t.role}
-                      </p>
-                    </div>
-                  </div>
-                  {t.company && (
-                    <img 
-                      src={`https://logo.clearbit.com/${t.company.toLowerCase().replace(/ /g, '')}.com`} 
-                      className="h-8 max-w-[80px] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" 
-                      alt={t.company}
-                      onError={(e) => e.currentTarget.style.display = 'none'}
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-                </div>
+                ))}
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
+            </div>
+
+            {/* Carousel navigation buttons */}
+            <button 
+              onClick={prevSlide}
+              className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-zinc-900 border border-black/10 hover:border-[#E8293B] hover:text-[#E8293B] flex items-center justify-center shadow-lg transition-all z-20 hover:scale-105"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button 
+              onClick={nextSlide}
+              className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white text-zinc-900 border border-black/10 hover:border-[#E8293B] hover:text-[#E8293B] flex items-center justify-center shadow-lg transition-all z-20 hover:scale-105"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={20} />
+            </button>
+
+            {/* Indicator dots navigation */}
+            <div className="flex justify-center flex-wrap gap-2 mt-8 max-w-full overflow-x-auto py-1">
+              {Array.from({ length: Math.max(0, TESTIMONIALS.length - visibleCount + 1) }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`h-2 transition-all rounded-full ${
+                    currentIndex === i ? "w-8 bg-[#E8293B]" : "w-2 bg-zinc-200 hover:bg-zinc-300"
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
+
+          </div>
+        </div>
       </div>
     </motion.main>
   )

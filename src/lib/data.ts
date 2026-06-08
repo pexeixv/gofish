@@ -10,6 +10,7 @@ export interface WorkItem {
   solution: string;
   results: string[];
   gallery: string[];
+  video?: string;
 }
 
 export interface ServiceItem {
@@ -35,7 +36,8 @@ export const workData: WorkItem[] = [
     challenge: "Establishing a premier motorsport event in India and driving massive audience engagement both on-ground and digitally.",
     solution: "Managed celebrity-led team ownerships across three franchises and executed a 360-degree media campaign.",
     results: ["20,000+ On-Ground Attendees", "14B+ Digital Impressions", "Global OTT Partnerships"],
-    gallery: ["https://picsum.photos/seed/racing1/800/600", "https://picsum.photos/seed/racing2/800/600"]
+    gallery: ["https://picsum.photos/seed/racing1/800/600", "https://picsum.photos/seed/racing2/800/600"],
+    video: "1zWD-PB_mZvryIv47W3JNKuwCFPXkRZku"
   },
   {
     id: "magic-moments-launch",
@@ -48,7 +50,8 @@ export const workData: WorkItem[] = [
     challenge: "Create a dominant market presence for a new premium brand in a highly competitive sector.",
     solution: "Onboarded prominent celebrities Jacqueline Fernandes & Kartik Aaryan and drove a mass rollout across TV, cinema, and digital.",
     results: ["+50% Q3 Profit Growth", "20% Share Price Increase", "+15% YoY Revenue Growth"],
-    gallery: ["https://picsum.photos/seed/magic1/800/600", "https://picsum.photos/seed/magic2/800/600"]
+    gallery: ["https://picsum.photos/seed/magic1/800/600", "https://picsum.photos/seed/magic2/800/600"],
+    video: "1XZLqTUSS3tbUH0erevFi1Lkp1_HijMqa"
   },
   {
     id: "z-pop-dream",
@@ -61,7 +64,8 @@ export const workData: WorkItem[] = [
     challenge: "Successfully introduce an international pop platform to the Indian target demographic.",
     solution: "Strategic media campaign to increase mobile app ('Glitsy') downloads across targeted digital properties.",
     results: ["30% Increase in App Downloads", "High Engagement Metrics", "Successful Market Entry"],
-    gallery: ["https://picsum.photos/seed/kpop1/800/600", "https://picsum.photos/seed/kpop2/800/600"]
+    gallery: ["https://picsum.photos/seed/kpop1/800/600", "https://picsum.photos/seed/kpop2/800/600"],
+    video: "1xJ8Yvp_y5njUrIyOq4geR6UEIfZLAUfa"
   },
   {
     id: "lloyd-deepika-ranveer",
@@ -74,7 +78,8 @@ export const workData: WorkItem[] = [
     challenge: "Elevate Lloyd's brand positioning by associating with the ultimate power couple of Indian cinema.",
     solution: "Comprehensive campaign spanning AC, Refrigerator, and Washing Machine segments featuring Deepika Padukone and Ranveer Singh.",
     results: ["Massive Brand Recall", "Premium Audience Reach", "Sustained National Campaign"],
-    gallery: ["https://picsum.photos/seed/lloyd1/800/600", "https://picsum.photos/seed/lloyd2/800/600"]
+    gallery: ["https://picsum.photos/seed/lloyd1/800/600", "https://picsum.photos/seed/lloyd2/800/600"],
+    video: "1cPDej69ADpYZHNv3g66V3y1uwLvr7SjT"
   }
 ];
 
